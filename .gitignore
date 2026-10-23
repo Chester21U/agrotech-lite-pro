@@ -1,0 +1,16 @@
+.pio/
+.vscode/
+__pycache__/
+*.pyc
+venv/
+.venv/
+dataset/
+dataset_crudo/
+dataset.zip
+runs/
+vision/modelos/*_ncnn_model/
+secrets.h
+.env
+node_modules/
+.DS_Store
+Thumbs.db
