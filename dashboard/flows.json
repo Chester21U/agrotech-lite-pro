@@ -1,0 +1,841 @@
+[
+    {
+        "id": "f_agrosmart",
+        "type": "tab",
+        "label": "AgroSmart",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "ui_base",
+        "type": "ui-base",
+        "name": "AgroSmart",
+        "path": "/dashboard",
+        "appIcon": "",
+        "includeClientData": true,
+        "acceptsClientConfig": [
+            "ui-notification",
+            "ui-control"
+        ],
+        "showPathInSidebar": false,
+        "headerContent": "page",
+        "navigationStyle": "default",
+        "titleBarStyle": "default",
+        "showReconnectNotification": true,
+        "notificationDisplayTime": "5",
+        "showDisconnectNotification": true
+    },
+    {
+        "id": "ui_theme",
+        "type": "ui-theme",
+        "name": "AgroSmart",
+        "colors": {
+            "surface": "#2f5d36",
+            "primary": "#4c7d55",
+            "bgPage": "#eef2ee",
+            "groupBg": "#ffffff",
+            "groupOutline": "#d9ded9"
+        },
+        "sizes": {
+            "density": "default",
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupBorderRadius": "8px",
+            "widgetGap": "12px"
+        }
+    },
+    {
+        "id": "ui_page",
+        "type": "ui-page",
+        "name": "Cultivo",
+        "ui": "ui_base",
+        "path": "/cultivo",
+        "icon": "sprout",
+        "layout": "grid",
+        "theme": "ui_theme",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 1,
+        "className": "",
+        "visible": true,
+        "disabled": false
+    },
+    {
+        "id": "g_indicadores",
+        "type": "ui-group",
+        "name": "Indicadores en tiempo real",
+        "page": "ui_page",
+        "width": "9",
+        "height": "1",
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": true,
+        "disabled": false,
+        "groupType": "default"
+    },
+    {
+        "id": "g_control",
+        "type": "ui-group",
+        "name": "Control de riego",
+        "page": "ui_page",
+        "width": "3",
+        "height": "1",
+        "order": 2,
+        "showTitle": true,
+        "className": "",
+        "visible": true,
+        "disabled": false,
+        "groupType": "default"
+    },
+    {
+        "id": "g_historico",
+        "type": "ui-group",
+        "name": "Histórico",
+        "page": "ui_page",
+        "width": "12",
+        "height": "1",
+        "order": 3,
+        "showTitle": true,
+        "className": "",
+        "visible": true,
+        "disabled": false,
+        "groupType": "default"
+    },
+    {
+        "id": "brk_agrosmart",
+        "type": "mqtt-broker",
+        "name": "Broker AgroSmart",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "node-red-agrosmart",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "mqtt_telemetria",
+        "type": "mqtt in",
+        "z": "f_agrosmart",
+        "name": "telemetria",
+        "topic": "agrosmart/nodo1/telemetria",
+        "qos": "0",
+        "datatype": "json",
+        "broker": "brk_agrosmart",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 130,
+        "y": 160,
+        "wires": [
+            [
+                "chg_t",
+                "chg_ha",
+                "chg_hs",
+                "chg_bomba",
+                "chg_modo",
+                "chg_bloqueo"
+            ]
+        ]
+    },
+    {
+        "id": "chg_t",
+        "type": "change",
+        "z": "f_agrosmart",
+        "name": "temperatura",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.t",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "Temperatura",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 350,
+        "y": 60,
+        "wires": [
+            [
+                "gauge_t",
+                "chart_historico"
+            ]
+        ]
+    },
+    {
+        "id": "chg_ha",
+        "type": "change",
+        "z": "f_agrosmart",
+        "name": "humedad aire",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.ha",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "Humedad del aire",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 350,
+        "y": 120,
+        "wires": [
+            [
+                "gauge_ha",
+                "chart_historico"
+            ]
+        ]
+    },
+    {
+        "id": "chg_hs",
+        "type": "change",
+        "z": "f_agrosmart",
+        "name": "humedad suelo",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.hs",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "Humedad del suelo",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 350,
+        "y": 180,
+        "wires": [
+            [
+                "gauge_hs",
+                "chart_historico"
+            ]
+        ]
+    },
+    {
+        "id": "chg_bomba",
+        "type": "change",
+        "z": "f_agrosmart",
+        "name": "estado bomba",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.bomba ? \"Regando\" : \"Detenida\"",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 350,
+        "y": 240,
+        "wires": [
+            [
+                "txt_bomba"
+            ]
+        ]
+    },
+    {
+        "id": "chg_modo",
+        "type": "change",
+        "z": "f_agrosmart",
+        "name": "modo",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.modo = \"auto\" ? \"Automático\" : \"Manual\"",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 350,
+        "y": 300,
+        "wires": [
+            [
+                "txt_modo"
+            ]
+        ]
+    },
+    {
+        "id": "chg_bloqueo",
+        "type": "change",
+        "z": "f_agrosmart",
+        "name": "bloqueo",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.bloqueo ? \"Depósito vacío\" : \"Normal\"",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 350,
+        "y": 360,
+        "wires": [
+            [
+                "txt_bloqueo"
+            ]
+        ]
+    },
+    {
+        "id": "gauge_t",
+        "type": "ui-gauge",
+        "z": "f_agrosmart",
+        "group": "g_indicadores",
+        "name": "Temperatura",
+        "label": "Temperatura",
+        "order": 1,
+        "width": "3",
+        "height": "3",
+        "gtype": "gauge-34",
+        "gstyle": "rounded",
+        "title": "Temperatura",
+        "units": "°C",
+        "icon": "",
+        "prefix": "",
+        "suffix": "",
+        "min": "0",
+        "max": "50",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#2d7dd2"
+            },
+            {
+                "from": "18",
+                "color": "#2f8f4e"
+            },
+            {
+                "from": "35",
+                "color": "#c0392b"
+            }
+        ],
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 620,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "gauge_ha",
+        "type": "ui-gauge",
+        "z": "f_agrosmart",
+        "group": "g_indicadores",
+        "name": "Humedad aire",
+        "label": "Humedad del aire",
+        "order": 2,
+        "width": "3",
+        "height": "3",
+        "gtype": "gauge-34",
+        "gstyle": "rounded",
+        "title": "Humedad del aire",
+        "units": "%",
+        "icon": "",
+        "prefix": "",
+        "suffix": "",
+        "min": "0",
+        "max": "100",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#c0392b"
+            },
+            {
+                "from": "30",
+                "color": "#2f8f4e"
+            },
+            {
+                "from": "80",
+                "color": "#2d7dd2"
+            }
+        ],
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 620,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "gauge_hs",
+        "type": "ui-gauge",
+        "z": "f_agrosmart",
+        "group": "g_indicadores",
+        "name": "Humedad suelo",
+        "label": "Humedad del suelo",
+        "order": 3,
+        "width": "3",
+        "height": "3",
+        "gtype": "gauge-34",
+        "gstyle": "rounded",
+        "title": "Humedad del suelo",
+        "units": "%",
+        "icon": "",
+        "prefix": "",
+        "suffix": "",
+        "min": "0",
+        "max": "100",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#c0392b"
+            },
+            {
+                "from": "30",
+                "color": "#f2b705"
+            },
+            {
+                "from": "60",
+                "color": "#2f8f4e"
+            }
+        ],
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 620,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "txt_bomba",
+        "type": "ui-text",
+        "z": "f_agrosmart",
+        "group": "g_control",
+        "order": 1,
+        "width": "3",
+        "height": "1",
+        "name": "Bomba",
+        "label": "Bomba",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "className": "",
+        "x": 620,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "txt_modo",
+        "type": "ui-text",
+        "z": "f_agrosmart",
+        "group": "g_control",
+        "order": 2,
+        "width": "3",
+        "height": "1",
+        "name": "Modo",
+        "label": "Modo",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "className": "",
+        "x": 620,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "txt_bloqueo",
+        "type": "ui-text",
+        "z": "f_agrosmart",
+        "group": "g_control",
+        "order": 3,
+        "width": "3",
+        "height": "1",
+        "name": "Estado",
+        "label": "Estado",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "className": "",
+        "x": 620,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "chart_historico",
+        "type": "ui-chart",
+        "z": "f_agrosmart",
+        "group": "g_historico",
+        "name": "Histórico",
+        "label": "Últimos 30 minutos",
+        "order": 1,
+        "chartType": "line",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisLabel": "",
+        "xAxisProperty": "",
+        "xAxisPropertyType": "timestamp",
+        "xAxisType": "time",
+        "xAxisFormat": "",
+        "xAxisFormatType": "auto",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "",
+        "yAxisProperty": "payload",
+        "yAxisPropertyType": "msg",
+        "ymin": "",
+        "ymax": "",
+        "bins": 10,
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "circle",
+        "pointRadius": 2,
+        "showLegend": true,
+        "removeOlder": "30",
+        "removeOlderUnit": "60",
+        "removeOlderPoints": "",
+        "colorScheme": "category-10",
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": "12",
+        "height": "5",
+        "className": "",
+        "interpolation": "linear",
+        "x": 620,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "sw_modo",
+        "type": "ui-switch",
+        "z": "f_agrosmart",
+        "name": "Modo automático",
+        "label": "Modo automático",
+        "group": "g_control",
+        "order": 4,
+        "width": "3",
+        "height": "1",
+        "passthru": false,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "className": "",
+        "onvalue": "auto",
+        "onvalueType": "str",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "manual",
+        "offvalueType": "str",
+        "officon": "",
+        "offcolor": "",
+        "x": 150,
+        "y": 520,
+        "wires": [
+            [
+                "mqtt_modo"
+            ]
+        ]
+    },
+    {
+        "id": "btn_on",
+        "type": "ui-button",
+        "z": "f_agrosmart",
+        "group": "g_control",
+        "name": "Encender bomba",
+        "label": "Encender bomba",
+        "order": 5,
+        "width": "3",
+        "height": "1",
+        "emulateClick": false,
+        "tooltip": "Solo funciona en modo manual",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "iconPosition": "left",
+        "payload": "on",
+        "payloadType": "str",
+        "topic": "",
+        "topicType": "str",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "x": 150,
+        "y": 580,
+        "wires": [
+            [
+                "mqtt_bomba"
+            ]
+        ]
+    },
+    {
+        "id": "btn_off",
+        "type": "ui-button",
+        "z": "f_agrosmart",
+        "group": "g_control",
+        "name": "Apagar bomba",
+        "label": "Apagar bomba",
+        "order": 6,
+        "width": "3",
+        "height": "1",
+        "emulateClick": false,
+        "tooltip": "Solo funciona en modo manual",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "iconPosition": "left",
+        "payload": "off",
+        "payloadType": "str",
+        "topic": "",
+        "topicType": "str",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "x": 150,
+        "y": 640,
+        "wires": [
+            [
+                "mqtt_bomba"
+            ]
+        ]
+    },
+    {
+        "id": "btn_reset",
+        "type": "ui-button",
+        "z": "f_agrosmart",
+        "group": "g_control",
+        "name": "Reiniciar bloqueo",
+        "label": "Reiniciar bloqueo",
+        "order": 7,
+        "width": "3",
+        "height": "1",
+        "emulateClick": false,
+        "tooltip": "Usar tras rellenar el depósito",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "iconPosition": "left",
+        "payload": "reset",
+        "payloadType": "str",
+        "topic": "",
+        "topicType": "str",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "x": 150,
+        "y": 700,
+        "wires": [
+            [
+                "mqtt_bomba"
+            ]
+        ]
+    },
+    {
+        "id": "mqtt_modo",
+        "type": "mqtt out",
+        "z": "f_agrosmart",
+        "name": "modo",
+        "topic": "agrosmart/nodo1/modo",
+        "qos": "0",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "brk_agrosmart",
+        "x": 450,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "mqtt_bomba",
+        "type": "mqtt out",
+        "z": "f_agrosmart",
+        "name": "bomba",
+        "topic": "agrosmart/nodo1/bomba",
+        "qos": "0",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "brk_agrosmart",
+        "x": 450,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "mqtt_alarma",
+        "type": "mqtt in",
+        "z": "f_agrosmart",
+        "name": "alarma",
+        "topic": "agrosmart/nodo1/alarma",
+        "qos": "0",
+        "datatype": "utf8",
+        "broker": "brk_agrosmart",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 130,
+        "y": 780,
+        "wires": [
+            [
+                "chg_alarma"
+            ]
+        ]
+    },
+    {
+        "id": "chg_alarma",
+        "type": "change",
+        "z": "f_agrosmart",
+        "name": "texto de alarma",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload = \"deposito_vacio\" ? \"Depósito vacío: la bomba se bloqueó\" : \"Corte de seguridad: la bomba llevaba 10 s encendida\"",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 360,
+        "y": 780,
+        "wires": [
+            [
+                "notif_alarma"
+            ]
+        ]
+    },
+    {
+        "id": "notif_alarma",
+        "type": "ui-notification",
+        "z": "f_agrosmart",
+        "ui": "ui_base",
+        "position": "top right",
+        "colorDefault": false,
+        "color": "#c0392b",
+        "displayTime": "6",
+        "showCountdown": true,
+        "allowDismiss": true,
+        "dismissText": "Cerrar",
+        "raw": false,
+        "className": "",
+        "name": "Alarma",
+        "x": 610,
+        "y": 780,
+        "wires": []
+    }
+]
